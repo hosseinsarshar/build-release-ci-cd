@@ -137,9 +137,6 @@ print(compute_target_cpu.get_status().serialize())
 # print(compute_target_gpu.get_status().serialize())
 
 
-# In[10]:
-
-
 cts = ws.compute_targets
 for ct in cts:
     print(ct)
