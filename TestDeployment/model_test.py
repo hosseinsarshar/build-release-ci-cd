@@ -62,6 +62,6 @@ test_samples = bytes(test_samples, encoding='utf8')
 # predict using the deployed model
 result = aks_service.run(input_data=test_samples)
 
-assert len(result) == 30
+assert len(result) == len(test_data)
 
 print('Model is working properly at the QA environment')
