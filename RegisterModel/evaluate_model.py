@@ -34,6 +34,8 @@ def evaluate_model():
     new_model_run_id = new_model_run.id
     print(f'New Run found with Run ID of: {new_model_run_id}')
 
+
+
     new_model_run = Run(exp, run_id=new_model_run_id)
     new_model_acc = new_model_run.get_metrics().get("final-accuracy")
 
