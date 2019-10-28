@@ -219,6 +219,5 @@ published_pipeline = pipeline_run.publish_pipeline(name=pipeline_name,
                                                    continue_on_step_failure=False)
 
 ## Free up compute resource(s) after computation is completed!
-
 print(f'Deleting compute resource: [{cluster_name_cpu}]')
 compute_target_cpu.delete()
