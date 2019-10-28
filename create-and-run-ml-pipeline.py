@@ -22,12 +22,20 @@ from azureml.core import Workspace, Experiment, Datastore
 from azureml.core.compute import AmlCompute
 from azureml.core.compute import ComputeTarget
 
+from azureml.core.runconfig import RunConfiguration
+from azureml.core.conda_dependencies import CondaDependencies
+from azureml.core.runconfig import DEFAULT_CPU_IMAGE
+
+from azureml.core.compute import ComputeTarget, AmlCompute
+from azureml.core.compute_target import ComputeTargetException
+
 # Check core SDK version number
 print("SDK version:", azureml.core.VERSION)
 
 from azureml.data.data_reference import DataReference
 from azureml.pipeline.core import Pipeline, PipelineData
 from azureml.pipeline.steps import PythonScriptStep
+from azureml.core.authentication import ServicePrincipalAuthentication
 
 import argparse
 
@@ -63,8 +71,6 @@ cluster_name_gpu = args.cluster_name_gpu
 pipeline_experiment_name = args.pipeline_experiment_name
 pipeline_name = args.pipeline_name
 
-from azureml.core.authentication import ServicePrincipalAuthentication
-
 service_principal = ServicePrincipalAuthentication(
         tenant_id=tenant_id,
         service_principal_id=application_id,
@@ -78,7 +84,6 @@ ws = Workspace.get(
             auth=service_principal)
 
 # Retrieve the pointer to the default Blob storage.
-
 def_blob_store = Datastore(ws, "workspaceblobstore")
 print("Blobstore's name: {}".format(def_blob_store.name))
 
@@ -89,12 +94,7 @@ blob_input_data = DataReference(
 
 print("DataReference object created")
 
-# Create a GPU cluster of type NV6 with 1 node. (due to subscription's limitations we stick to 1 node)
-
-from azureml.core.compute import ComputeTarget, AmlCompute
-from azureml.core.compute_target import ComputeTargetException
-
-# choose a name for your cluster
+# Create a CPU cluster of type D2 V2 with 1 node. (due to subscription's limitations we stick to 1 node)
 
 try:
     compute_target_cpu = ComputeTarget(workspace=ws, name=cluster_name_cpu)
@@ -115,7 +115,6 @@ except ComputeTargetException:
 # use get_status() to get a detailed status for the current cluster. 
 print(compute_target_cpu.get_status().serialize())
 
-# In[9]:
 
 # try:
 #     compute_target_gpu = ComputeTarget(workspace=ws, name=cluster_name_gpu)
@@ -141,40 +140,15 @@ cts = ws.compute_targets
 for ct in cts:
     print(ct)
 
-
-# In[11]:
-
-
 processed_mnist_data = PipelineData("processed_mnist_data", datastore=def_blob_store)
 processed_mnist_data
 
-
-# In[12]:
-
-
-from azureml.core.runconfig import RunConfiguration
-from azureml.core.conda_dependencies import CondaDependencies
-from azureml.core.runconfig import DEFAULT_CPU_IMAGE
-
-# create a new runconfig object
 run_config = RunConfiguration()
-
-# enable Docker 
 run_config.environment.docker.enabled = True
-
-# set Docker base image to the default CPU-based image
 run_config.environment.docker.base_image = DEFAULT_CPU_IMAGE
-
-# use conda_dependencies.yml to create a conda environment in the Docker image for execution
 run_config.environment.python.user_managed_dependencies = False
-
-# specify CondaDependencies obj
 run_config.environment.python.conda_dependencies = CondaDependencies.create(pip_packages=['azureml-sdk',
                                                                                           'numpy'])
-
-
-# In[13]:
-
 
 # source directory
 source_directory = 'DataExtraction'
@@ -189,10 +163,6 @@ extractDataStep = PythonScriptStep(
 
 print("Data Extraction Step created")
 
-
-# In[14]:
-
-
 from azureml.train.dnn import TensorFlow
 
 source_directory = 'Training'
@@ -201,9 +171,6 @@ est = TensorFlow(source_directory=source_directory,
                  entry_script='train.py', 
                  use_gpu=False, 
                  framework_version='1.13')
-
-
-# In[15]:
 
 from azureml.pipeline.steps import EstimatorStep
 
@@ -223,10 +190,6 @@ trainingStep = EstimatorStep(name="Training-Step",
 
 print("Model Training Step is Completed")
 
-
-# In[16]:
-
-
 # source directory
 source_directory = 'RegisterModel'
 
@@ -243,27 +206,11 @@ modelEvalReg = PythonScriptStep(
 modelEvalReg.run_after(trainingStep)
 print("Model Evaluation and Registration Step is Created")
 
-
-# In[17]:
-
-
 from azureml.pipeline.core import Pipeline
 from azureml.core import Experiment
 pipeline = Pipeline(workspace=ws, steps=[extractDataStep, trainingStep, modelEvalReg])
 pipeline_run = Experiment(ws, pipeline_experiment_name).submit(pipeline)
 
-
-# In[18]:
-
-
-
-# In[19]:
-
-
-pipeline_run.id
-
-
-# In[20]:
 pipeline_run.wait_for_completion(show_output=True, raise_on_error=True)
 
 published_pipeline = pipeline_run.publish_pipeline(name=pipeline_name, 
@@ -271,9 +218,7 @@ published_pipeline = pipeline_run.publish_pipeline(name=pipeline_name,
                                                    version="0.1", 
                                                    continue_on_step_failure=False)
 
+## Free up compute resource(s) after computation is completed!
 
-# In[ ]:
-
-
-
-
+print(f'Deleting compute resource: [{cluster_name_cpu}]')
+compute_target_cpu.delete()

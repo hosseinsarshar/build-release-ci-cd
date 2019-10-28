@@ -98,7 +98,6 @@ aciconfig = AciWebservice.deploy_configuration(cpu_cores = 1,
                                                tags = {'area': "MNIST", 'type': "classification"}, 
                                                description = 'Predict digits from MNIST dataset')
 
-
 try:
     aci_service = Webservice(name = aks_service_name, workspace = ws)
     print('Found the webservice, deleting the service to add a new one')
