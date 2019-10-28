@@ -1,2 +1,6 @@
 /.i*
 /data
+/Score/data
+.azureml
+/*/__*
+.vscode

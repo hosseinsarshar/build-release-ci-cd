@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import azureml.core
 from azureml.core import Workspace, Experiment, Datastore
 from azureml.core.compute import AmlCompute
@@ -15,6 +9,7 @@ print("SDK version:", azureml.core.VERSION)
 from azureml.core.compute import AksCompute
 from azureml.core.webservice import Webservice, AksWebservice
 from azureml.core.image import ContainerImage
+from azureml.core.webservice import AciWebservice
 
 import argparse
 import os
@@ -47,20 +42,6 @@ model_name = args.model_name
 image_name = args.image_name
 aks_name = args.aks_name
 aks_service_name = args.aks_service_name
-
-print(f'Current directory: {os.getcwd()}')
-print(f'script_root: {script_root}')
-print(f'tenant_id: {tenant_id}')
-print(f'application_id: {application_id}')
-print(f'subscription_id: {subscription_id}')
-print(f'app_secret: {app_secret}')
-print(f'resource_group: {resource_group}')
-print(f'workspace_name: {workspace_name}')
-print(f'workspace_region: {workspace_region}')
-print(f'model_name: {model_name}')
-print(f'image_name: {image_name}')
-print(f'aks_name: {aks_name}')
-print(f'aks_service_name: {aks_service_name}')
 
 os.chdir(script_root)
 
@@ -109,7 +90,39 @@ image = ContainerImage.create(name = image_name,
 
 image.wait_for_creation(show_output = True)
 
-from azureml.core.compute import ComputeTarget
+## ---------------------------- If you have free Azure credit (Start) -------------------------------
+## This section, we deploy the image as a WebService on Azure Container Instance. This is light way to host the image 
+## if you have free credit or you don't want to host your model on Kubernetes cluster
+aciconfig = AciWebservice.deploy_configuration(cpu_cores = 1, 
+                                               memory_gb = 1, 
+                                               tags = {'area': "MNIST", 'type': "classification"}, 
+                                               description = 'Predict digits from MNIST dataset')
+
+
+try:
+    aci_service = Webservice(name = aks_service_name, workspace = ws)
+    print('Found the webservice, deleting the service to add a new one')
+    aci_service.delete()
+    print('Old webservice is deleted')
+except Exception:
+    print("This webservice doesn't exist")
+finally:
+    print('Deploying the new web service')
+    aci_service = Webservice.deploy_from_image(deployment_config = aciconfig,
+                                           image = image,
+                                           name = aks_service_name,
+                                           workspace = ws)
+
+    aci_service.wait_for_deployment(show_output = True)
+    print('This webservice is deployed')
+
+## ---------------------------- If you have free Azure credit (End) -------------------------------
+
+## ---------------------------- If you have Updated your Azure credit off of free tier (Start) -------------------------------
+## This section, creates a Kubernetes cluster and deploys the image as a WebService on the Kubernetes cluster. 
+## You should have a non-free subscription to execute this section.
+
+'''from azureml.core.compute import ComputeTarget
 from azureml.core.compute_target import ComputeTargetException
 
 try:
@@ -154,3 +167,6 @@ finally:
 
     aks_service.wait_for_deployment(show_output = True)
     print('This webservice is deployed')
+'''
+
+## ---------------------------- If you have Updated your Azure credit off of free tier (End) -------------------------------

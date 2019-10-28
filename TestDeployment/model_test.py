@@ -64,4 +64,4 @@ result = aks_service.run(input_data=test_samples)
 
 assert len(result) == len(test_data)
 
-print('Model is working properly at the QA environment')
+print(f'Model is working properly at the {aks_service_name} environment')
