@@ -223,3 +223,7 @@ print(f'Deleting compute resource: [{cluster_name_cpu}]')
 compute_target_cpu.delete()
 
 
+
+
+
+
