@@ -150,6 +150,8 @@ run_config.environment.python.user_managed_dependencies = False
 run_config.environment.python.conda_dependencies = CondaDependencies.create(pip_packages=['azureml-sdk',
                                                                                           'numpy'])
 
+
+
 # source directory
 source_directory = 'DataExtraction'
 
