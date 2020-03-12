@@ -1,6 +1,6 @@
 # build-release-ci-cd
 
-This repo is built by Hossein Sarshar inspired from [Microsfot MLOps](https://github.com/Microsoft/MLOps) repo. Should you have any questions, feel free to email me at hossein.sarshar@gmail.com or tweet me at [classicboyir](https://twitter.com/classicboyir).
+This repo is built by Hossein Sarshar inspired from [Microsoft MLOps](https://github.com/Microsoft/MLOps) repo. Should you have any questions, feel free to email me at hossein.sarshar@gmail.com or tweet me at [classicboyir](https://twitter.com/classicboyir).
 
 This repo is backed by Build Pipeline:
 
