@@ -15,6 +15,8 @@ def init():
     X = tf.get_default_graph().get_tensor_by_name("network/X:0")
     output = tf.get_default_graph().get_tensor_by_name("network/output/MatMul:0")
     
+
+    
     sess = tf.Session()
     saver.restore(sess, os.path.join(model_root, model_name))
     print ("model initialized at " + time.strftime("%H:%M:%S"))
