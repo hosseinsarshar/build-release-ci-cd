@@ -16,4 +16,4 @@ This repo contains a set of procedures that helps you build the full CI/CD pipel
 
 A successful implementation of this repo will result in the following diagram.
 
-![MLOps Architecture](assets/FinalArch.jpg)
+![MLOps Architecture](assets/MLOpsArchFlow.jpg)
