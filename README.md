@@ -1,6 +1,6 @@
 # build-release-ci-cd
 
-This repo is built by Hossein Sarshar inspired from [Microsoft MLOps](https://github.com/Microsoft/MLOps) repo. Should you have any questions, feel free to email me at hossein.sarshar@gmail.com or tweet me at [classicboyir](https://twitter.com/classicboyir).
+This repo is built by Hossein Sarshar inspired from [Microsoft MLOps](https://github.com/Microsoft/MLOps) repo for the [AISC MLOps Workshop](https://www.eventbrite.ca/e/premium-hands-on-workshop-ml-ops-cloud-for-successful-ml-products-tickets-71406154731?aff=lunch#). Should you have any questions, feel free to email me at hossein.sarshar@gmail.com or tweet me at [classicboyir](https://twitter.com/classicboyir).
 
 This repo is backed by Build Pipeline:
 
@@ -13,3 +13,7 @@ This repo contains a set of procedures that helps you build the full CI/CD pipel
 3. To find out the steps required in the Deployment time, check out this notebook: [DeployModel.ipynb](https://github.com/classicboyir/build-release-ci-cd/blob/master/DeployModel.ipynb)
 4. Then, it's time to work on your entire build and release Pipeline, for the instructions, read: [Create_Release_Pipeline_Instructions.ipynb](https://github.com/classicboyir/build-release-ci-cd/blob/master/Create_Release_Pipeline_Instructions.ipynb)
 5. Now, have everything you needed. Check your release pipeline and enjoy it.
+
+A successful implementation of this repo will result in the following diagram.
+
+![MLOps Architecture](assets/FinalArch.jpg)
