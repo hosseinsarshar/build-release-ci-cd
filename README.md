@@ -1,4 +1,4 @@
-# build-release-ci-cd
+# Build Full CI/CD Enabled MLOps Pipeline
 
 This repo is built by Hossein Sarshar inspired from [Microsoft MLOps](https://github.com/Microsoft/MLOps) repo for the [AISC MLOps Workshop](https://www.eventbrite.ca/e/premium-hands-on-workshop-ml-ops-cloud-for-successful-ml-products-tickets-71406154731?aff=lunch#). Should you have any questions, feel free to email me at hossein.sarshar@gmail.com or tweet me at [classicboyir](https://twitter.com/classicboyir).
 
