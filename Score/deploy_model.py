@@ -115,6 +115,9 @@ finally:
     aci_service.wait_for_deployment(show_output = True)
     print('This webservice is deployed')
 
+
+
+
 ## ---------------------------- If you have free Azure credit (End) -------------------------------
 
 ## ---------------------------- If you have Updated your Azure credit off of free tier (Start) -------------------------------
